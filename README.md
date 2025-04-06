@@ -42,7 +42,7 @@
 
 ## 예상 게임 화면
 ![타이틀화면](./resource/타이틀화면.png)
-#### 예상 인게임 화면
+#### 예상 인게임 화면(ex. SUBWAY SURFERS)
 ![인게임화면](./resource/플레이_화면.jpg)
 ![종료화면](./resource/종료화면.png)
 
