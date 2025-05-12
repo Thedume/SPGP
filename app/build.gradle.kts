@@ -6,6 +6,11 @@ android {
     namespace = "kr.ac.tukorea.ge.and.endlessrunner"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "kr.ac.tukorea.ge.and.endlessrunner"
         minSdk = 24
@@ -33,6 +38,7 @@ android {
 
 dependencies {
 
+    implementation(project(":a2dg"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "EndlessRunner"
 include(":app")
+include(":a2dg")
  
