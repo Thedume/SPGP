@@ -3,10 +3,13 @@ package kr.ac.tukorea.ge.and.endlessrunner.game;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.and.endlessrunner.app.MainActivity;
@@ -21,6 +24,11 @@ public class GameOverScene extends Scene {
     private final int score;
     private final float distance;
     private final boolean isMale;
+
+    // 게임 종료 시 SharedPreferences 저장
+    SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
+    String scoresStr = prefs.getString("records", "");
+    ArrayList<Integer> scores = new ArrayList<>();
 
     public GameOverScene(int score, float distance, boolean isMale) {
         this.score = score;
@@ -65,7 +73,7 @@ public class GameOverScene extends Scene {
 
         Paint paint = new Paint();
         paint.setTextSize(70f);
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.BLACK);
         paint.setTextAlign(Paint.Align.CENTER);
 
         canvas.drawText("Game Over", Metrics.width / 2, 400, paint);
@@ -82,6 +90,30 @@ public class GameOverScene extends Scene {
     @Override
     public void onEnter() {
         super.onEnter();
+
+        SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
+        String scoresStr = prefs.getString("records", "");
+        ArrayList<Integer> scores = new ArrayList<>();
+
+        if (!scoresStr.isEmpty()) {
+            for (String s : scoresStr.split(",")) {
+                scores.add(Integer.parseInt(s));
+            }
+        }
+
+        scores.add(score);
+        scores.sort((a, b) -> b - a);
+
+        while (scores.size() > 5) scores.remove(scores.size() - 1);
+
+        StringBuilder sb = new StringBuilder();
+        for (int s : scores) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(s);
+        }
+
+        prefs.edit().putString("records", sb.toString()).apply();
+
 
         Log.d("SceneStack", "📦 Current Scene Stack:");
         for (Scene scene : GameView.view.getSceneStack()) {
