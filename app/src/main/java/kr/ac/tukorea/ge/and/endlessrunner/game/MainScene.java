@@ -78,7 +78,7 @@ public class MainScene extends Scene {
             float x = player.getLaneX(lane);
             float y = -100f;
             float size = 150f;
-            Obstacle obs = new Obstacle(R.mipmap.obstacle_box, x, y, size);
+            Obstacle obs = new Obstacle(R.mipmap.obstacle_box, x);
             add(Layer.obstacle, obs);
         }
 
