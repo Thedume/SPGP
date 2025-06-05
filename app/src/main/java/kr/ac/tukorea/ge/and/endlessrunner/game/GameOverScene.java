@@ -25,10 +25,6 @@ public class GameOverScene extends Scene {
     private final float distance;
     private final boolean isMale;
 
-    // 게임 종료 시 SharedPreferences 저장
-    SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
-    String scoresStr = prefs.getString("records", "");
-    ArrayList<Integer> scores = new ArrayList<>();
 
     public GameOverScene(int score, float distance, boolean isMale) {
         this.score = score;

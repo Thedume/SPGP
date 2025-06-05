@@ -104,38 +104,41 @@ public class MainScene extends Scene {
         return Layer.controller.ordinal();
     }
 
+    private boolean gestureUsed = false;
+    private float swipeThreshold = 50f;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float[] pts = Metrics.fromScreen(event.getX(), event.getY());
+        float x = pts[0], y = pts[1];
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                startX = pts[0];
-                startY = pts[1];
-                return true;
-            case MotionEvent.ACTION_UP:
-                float dx = pts[0] - startX;
-                float dy = pts[1] - startY;
+                startX = x;
+                startY = y;
+                gestureUsed = false;
+                break;
 
-                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
-                    if (dx < 0) {
-                        Log.d(TAG, "스와이프 ◀: moveLeft()");
-                        player.moveLeft();
-                    } else {
-                        Log.d(TAG, "스와이프 ▶: moveRight()");
-                        player.moveRight();
-                    }
-                } else if (Math.abs(dy) > SWIPE_THRESHOLD) {
-                    if (dy < 0) {
-                        Log.d(TAG, "스와이프 ↑: jump()");
-                        player.jump();
-                    } else {
-                        Log.d(TAG, "스와이프 ↓: slide()");
-                        player.slide();
-                    }
+            case MotionEvent.ACTION_MOVE:
+                if (gestureUsed) break;
+
+                float dx = x - startX;
+                float dy = y - startY;
+
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > swipeThreshold) {
+                    if (dx > 0) player.moveRight(); else player.moveLeft();
+                    gestureUsed = true;
+                } else if (Math.abs(dy) > swipeThreshold) {
+                    if (dy > 0) player.slide(); else player.jump();
+                    gestureUsed = true;
                 }
-                return true;
+                break;
+
+            case MotionEvent.ACTION_UP:
+                gestureUsed = false;
+                break;
         }
-        return false;
+        return true;
     }
 
     @Override
