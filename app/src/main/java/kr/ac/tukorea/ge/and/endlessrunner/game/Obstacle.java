@@ -10,13 +10,16 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 
 public class Obstacle extends Sprite implements IBoxCollidable {
     private static final float SPEED = 600f;
-    private static final float START_Y = -1500f;
-    private static final float END_Y = Metrics.height * 0.8f;
-    private static final float START_SCALE = 0.3f;
-    private static final float END_SCALE = 1.5f;
+    private float startX, endX;
+    private float startY = -500f;
+    private float endY = Metrics.height * 0.8f;
+    private float startScale = 0.3f;
+    private float endScale = 1.25f;
 
-    public Obstacle(int resId, float x) {
-        super(resId, x, START_Y, 0, 0); // 초기 크기는 0, 크기는 update()에서 결정
+    public Obstacle(int resId, float x, float yOffset) {
+        super(resId, x, -1500f + yOffset, 0, 0);
+        this.startX = Metrics.width / 2f; // 중앙에서 시작
+        this.endX = x; // 목표 x로 퍼짐
     }
 
     @Override
@@ -24,10 +27,13 @@ public class Obstacle extends Sprite implements IBoxCollidable {
         float dy = SPEED * GameView.frameTime;
         y += dy;
 
-        float t = (y - START_Y) / (END_Y - START_Y);
-        t = Math.min(Math.max(t, 0f), 1f); // Clamp between 0 and 1
-        float scale = START_SCALE + (END_SCALE - START_SCALE) * t;
+        float t = (y - startY) / (endY - startY);
+        t = Math.min(Math.max(t, 0f), 1f); // Clamp
+
+        float scale = startScale + (endScale - startScale) * t;
         float size = 150f * scale;
+
+        x = startX + (endX - startX) * t;
         setSize(size, size);
 
         if (y - height / 2 > Metrics.height) {

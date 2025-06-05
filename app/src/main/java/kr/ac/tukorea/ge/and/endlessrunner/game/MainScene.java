@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IBoxCollidable;
@@ -36,12 +38,18 @@ public class MainScene extends Scene {
     private float startX, startY;
     private static final float SWIPE_THRESHOLD = 50f;
 
-    private float obstacleTimer = 0f;
-    private float spawnInterval = 1.2f;
     private int lastLane = -1;
 
     private static final String TAG = MainScene.class.getSimpleName();
 
+    // 장애물 전용
+    private float spawnInterval = 2.5f;          // 장애물 묶음 생성 주기
+    private float obstacleTimer = 0f;
+
+    private float spawnDelay = 0.5f;             // 개별 장애물 간 생성 간격
+    private float spawnDelayTimer = 0f;
+
+    private Queue<Integer> obstacleQueue = new LinkedList<>(); // 생성 예약된 레인 인덱스들
 
     public MainScene(boolean isMale) {
         this.isMale = isMale;
@@ -66,21 +74,37 @@ public class MainScene extends Scene {
         distance += GameView.frameTime * 300; // 초당 300픽셀 = 3m
 
         // 장애물 생성 로직
+        // 장애물 묶음 생성 예약
         obstacleTimer += GameView.frameTime;
-        if (obstacleTimer >= spawnInterval) {
+        if (obstacleTimer >= spawnInterval && obstacleQueue.isEmpty()) {
             obstacleTimer = 0f;
-            int lane;
-            do {
-                lane = (int)(Math.random() * 3);
-            } while (lane == lastLane);
-            lastLane = lane;
 
-            float x = player.getLaneX(lane);
-            float y = -100f;
-            float size = 150f;
-            Obstacle obs = new Obstacle(R.mipmap.obstacle_box, x);
-            add(Layer.obstacle, obs);
+            int[] lanes = {0, 1, 2};
+            shuffleArray(lanes);
+            int count = 2 + (int)(Math.random() * 2); // 2~3개
+
+            for (int i = 0; i < count; i++) {
+                obstacleQueue.add(lanes[i]);
+            }
+            spawnDelayTimer = 0f; // 다음 spawn 시작
         }
+
+// 예약된 장애물 생성
+        if (!obstacleQueue.isEmpty()) {
+            spawnDelayTimer += GameView.frameTime;
+            if (spawnDelayTimer >= spawnDelay) {
+                spawnDelayTimer = 0f;
+
+                int lane = obstacleQueue.poll();
+                float x = player.getLaneX(lane);
+                float yOffset = (float)(Math.random() * 100f);
+
+                Obstacle obs = new Obstacle(R.mipmap.obstacle_box, x, yOffset);
+                add(Layer.obstacle, obs);
+            }
+        }
+
+
 
         // 충돌 감지
         ArrayList<IGameObject> obstacles = objectsAt(Layer.obstacle);
@@ -96,6 +120,15 @@ public class MainScene extends Scene {
                 }
                 break;
             }
+        }
+    }
+
+    private void shuffleArray(int[] array) {
+        for (int i = array.length - 1; i > 0; i--) {
+            int j = (int)(Math.random() * (i + 1));
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
     }
 
