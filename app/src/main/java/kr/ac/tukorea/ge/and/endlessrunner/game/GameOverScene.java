@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,6 +18,7 @@ import java.util.ArrayList;
 import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.and.endlessrunner.app.MainActivity;
 import kr.ac.tukorea.ge.and.endlessrunner.game.MainScene;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
@@ -24,7 +29,7 @@ public class GameOverScene extends Scene {
     private final int score;
     private final float distance;
     private final boolean isMale;
-
+    private Sprite gameOverSprite;
 
     public GameOverScene(int score, float distance, boolean isMale) {
         this.score = score;
@@ -32,6 +37,9 @@ public class GameOverScene extends Scene {
         this.isMale = isMale;
 
         initLayers(Layer.COUNT.ordinal());
+
+        gameOverSprite = new Sprite(R.mipmap.game_over_2, Metrics.width / 2, Metrics.height * 0.15f, 800, 200);
+        add(Layer.ui, gameOverSprite);
 
         add(Layer.ui, new Button(
                 R.mipmap.retry_button,
@@ -68,14 +76,16 @@ public class GameOverScene extends Scene {
         super.draw(canvas);
 
         Paint paint = new Paint();
-        paint.setTextSize(70f);
+        paint.setTextSize(60f);
         paint.setColor(Color.BLACK);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        canvas.drawText("Game Over", Metrics.width / 2, 400, paint);
-        canvas.drawText("Score: " + score, Metrics.width / 2, 500, paint);
-        canvas.drawText("Distance: " + (int)distance + "m", Metrics.width / 2, 600, paint);
-        canvas.drawText("Character: " + (isMale ? "Male" : "Female"), Metrics.width / 2, 700, paint);
+        
+
+        // canvas.drawText("Game Over", Metrics.width / 2, 400, paint);
+        canvas.drawText("Score: " + score, Metrics.width / 2, 600, paint);
+        canvas.drawText("Distance: " + (int)distance + " m", Metrics.width / 2, 700, paint);
+        canvas.drawText("Character: " + (isMale ? "Male" : "Female"), Metrics.width / 2, 800, paint);
     }
 
     @Override
