@@ -16,9 +16,14 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 
 public class TitleScene extends Scene {
     private int characterIndex = 0; // 0 = 남자, 1 = 여자
+    private Sprite titleSprite;
 
     public TitleScene() {
         initLayers(Layer.COUNT.ordinal());
+
+        // 타이틀 스프라이트 추가
+        titleSprite = new Sprite(R.mipmap.endless_runner_logo, Metrics.width / 2, 150, 800, 550);
+        add(Layer.ui, titleSprite);
 
         float iconY = Metrics.height * 0.575f;
         float buttonY = Metrics.height * 0.7f;
@@ -85,12 +90,9 @@ public class TitleScene extends Scene {
         super.draw(canvas);
 
         Paint paint = new Paint();
-        paint.setTextSize(70f);
+        paint.setTextSize(55f);
         paint.setColor(Color.BLACK);
         paint.setTextAlign(Paint.Align.CENTER);
-
-        // 제목
-        canvas.drawText("ENDLESS RUNNER", Metrics.width / 2, 150, paint);
 
         SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
         String scoresStr = prefs.getString("records", "");
