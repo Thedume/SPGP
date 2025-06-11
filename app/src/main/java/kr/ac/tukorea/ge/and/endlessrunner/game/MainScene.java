@@ -34,6 +34,7 @@ public class MainScene extends Scene {
     private int score = 0;
     private float distance = 0f;
     private boolean isMale;
+    private boolean isPlayerDead = false;  // 플레이어 생존 상태 추적
 
     private float startX, startY;
     private static final float SWIPE_THRESHOLD = 50f;
@@ -116,6 +117,7 @@ public class MainScene extends Scene {
                 remove(Layer.obstacle, obj);
 
                 if (player.isDead()) {
+                    isPlayerDead = true;  // 플레이어가 죽었음을 표시
                     new GameOverScene(score, distance, isMale).change();
                 }
                 break;
@@ -142,18 +144,25 @@ public class MainScene extends Scene {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (isPlayerDead) {
+            // 게임 오버 상태에서는 모든 터치 이벤트를 무시하고 초기화
+            gestureUsed = false;
+            return false;
+        }
+
         float[] pts = Metrics.fromScreen(event.getX(), event.getY());
         float x = pts[0], y = pts[1];
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (isPlayerDead) return false;
                 startX = x;
                 startY = y;
                 gestureUsed = false;
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if (gestureUsed) break;
+                if (isPlayerDead || gestureUsed) return false;
 
                 float dx = x - startX;
                 float dy = y - startY;
@@ -170,6 +179,12 @@ public class MainScene extends Scene {
             case MotionEvent.ACTION_UP:
                 gestureUsed = false;
                 break;
+        }
+
+        if (player.isDead()) {
+            isPlayerDead = true;
+            gestureUsed = false;  // 제스처 상태 초기화
+            new GameOverScene(score, distance, isMale).change();
         }
         return true;
     }

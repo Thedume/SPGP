@@ -32,6 +32,10 @@ public class Player extends SheetSprite implements IBoxCollidable {
     private static final float OFFSET = 250f;
     private static final float EPSILON = 1.0f;
 
+    private boolean isInvincible = false;
+    private static final float INVINCIBLE_DURATION = 1.5f;
+    private float invincibleTimer = 0f;
+
     public Player(int resId, float fps) {
         super(resId, fps);
         this.state = State.RUN;
@@ -112,7 +116,11 @@ public class Player extends SheetSprite implements IBoxCollidable {
     }
 
     public void decreaseLife() {
-        life--;
+        if (!isInvincible) {
+            life--;
+            isInvincible = true;
+            invincibleTimer = INVINCIBLE_DURATION;
+        }
     }
 
     public boolean isDead() {
@@ -125,6 +133,11 @@ public class Player extends SheetSprite implements IBoxCollidable {
 
     @Override
     public void draw(Canvas canvas) {
+        // 무적 상태일 때 깜빡이는 효과
+        if (isInvincible && (int)(System.currentTimeMillis() / 100) % 2 == 0) {
+            return;
+        }
+        
         // 기존 draw 유지
         long now = System.currentTimeMillis();
         float t = (now - createdOn) / 1000f;
@@ -154,6 +167,14 @@ public class Player extends SheetSprite implements IBoxCollidable {
     @Override
     public void update() {
         super.update();
+
+        // 무적 상태 업데이트
+        if (isInvincible) {
+            invincibleTimer -= GameView.frameTime;
+            if (invincibleTimer <= 0) {
+                isInvincible = false;
+            }
+        }
 
         // X축 이동 (좌우 레인)
         if (targetX != null) {
@@ -208,5 +229,9 @@ public class Player extends SheetSprite implements IBoxCollidable {
     @Override
     public RectF getCollisionRect() {
         return dstRect;
+    }
+
+    public boolean isInvincible() {
+        return isInvincible;
     }
 }
