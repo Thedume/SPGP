@@ -6,10 +6,12 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
 
+import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IBoxCollidable;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.SheetSprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
 
 public class Player extends SheetSprite implements IBoxCollidable {
     // 기존 상태/애니메이션 프레임 유지
@@ -107,6 +109,8 @@ public class Player extends SheetSprite implements IBoxCollidable {
         state = State.JUMP;
         targetY = originalY - OFFSET;
         returningY = false;
+        // 점프 효과음 재생
+        Sound.playEffect(R.raw.jump);
     }
 
     public void slide() {
@@ -135,6 +139,8 @@ public class Player extends SheetSprite implements IBoxCollidable {
             life--;
             isInvincible = true;
             invincibleTimer = INVINCIBLE_DURATION;
+            // 데미지 효과음 재생
+            Sound.playEffect(R.raw.damaged);
         }
     }
 
@@ -239,7 +245,6 @@ public class Player extends SheetSprite implements IBoxCollidable {
                     targetY = null;      // 완전히 종료
                     returningY = false;
                 } else {
-
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         targetY = originalY;
                         returningY = true;

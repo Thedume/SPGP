@@ -15,6 +15,7 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
 
 public class GameOverScene extends Scene {
 
@@ -41,7 +42,10 @@ public class GameOverScene extends Scene {
                 Metrics.width / 2, Metrics.height * 0.7f,
                 400f, 150f,
                 pressed -> {
-                    new MainScene(isMale).change();
+                    if (pressed) {
+                        Sound.playEffect(R.raw.touch);
+                        new MainScene(isMale).change();
+                    }
                     return true;
                 }
         );
@@ -54,7 +58,10 @@ public class GameOverScene extends Scene {
                 Metrics.width / 2, Metrics.height * 0.825f,
                 400f, 150f,
                 pressed -> {
-                    new TitleScene().change();
+                    if (pressed) {
+                        Sound.playEffect(R.raw.touch);
+                        new TitleScene().change();
+                    }
                     return true;
                 }
         );
@@ -63,36 +70,13 @@ public class GameOverScene extends Scene {
 
     }
 
-    public enum Layer {
-        ui, COUNT
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-
-        Paint paint = new Paint();
-        paint.setTextSize(60f);
-        paint.setColor(Color.BLACK);
-        paint.setTextAlign(Paint.Align.CENTER);
-
-        
-
-        // canvas.drawText("Game Over", Metrics.width / 2, 400, paint);
-        canvas.drawText("Score: " + score, Metrics.width / 2, 600, paint);
-        canvas.drawText("Distance: " + (int)distance + " m", Metrics.width / 2, 700, paint);
-        canvas.drawText("Character: " + (isMale ? "Male" : "Female"), Metrics.width / 2, 800, paint);
-    }
-
-    @Override
-    protected int getTouchLayerIndex() {
-        return Layer.ui.ordinal(); // ui 레이어에 있는 버튼이 터치를 받도록 지정
-    }
-
     @Override
     public void onEnter() {
         super.onEnter();
+        // 배경음악 재생
+        Sound.playMusic(R.raw.background);
 
+        // 점수 저장 로직
         SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
         String scoresStr = prefs.getString("records", "");
         ArrayList<Integer> scores = new ArrayList<>();
@@ -116,10 +100,40 @@ public class GameOverScene extends Scene {
 
         prefs.edit().putString("records", sb.toString()).apply();
 
-
         Log.d("SceneStack", "📦 Current Scene Stack:");
         for (Scene scene : GameView.view.getSceneStack()) {
             Log.d("SceneStack", " - " + scene.getClass().getSimpleName());
         }
+    }
+
+    @Override
+    public void onExit() {
+        super.onExit();
+        // 배경음악 정지
+        Sound.stopMusic();
+    }
+
+    public enum Layer {
+        ui, COUNT
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        Paint paint = new Paint();
+        paint.setTextSize(60f);
+        paint.setColor(Color.BLACK);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        // canvas.drawText("Game Over", Metrics.width / 2, 400, paint);
+        canvas.drawText("Score: " + score, Metrics.width / 2, 600, paint);
+        canvas.drawText("Distance: " + (int)distance + " m", Metrics.width / 2, 700, paint);
+        canvas.drawText("Character: " + (isMale ? "Male" : "Female"), Metrics.width / 2, 800, paint);
+    }
+
+    @Override
+    protected int getTouchLayerIndex() {
+        return Layer.ui.ordinal(); // ui 레이어에 있는 버튼이 터치를 받도록 지정
     }
 }

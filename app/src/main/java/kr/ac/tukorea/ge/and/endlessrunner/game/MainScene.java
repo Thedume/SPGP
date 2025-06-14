@@ -19,6 +19,7 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.util.CollisionHelper;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
 
 public class MainScene extends Scene {
     public enum Layer {
@@ -64,6 +65,20 @@ public class MainScene extends Scene {
         player = new Player(resId, isMale, 10); // 10fps
         player.setPosition(playerX, playerY, 200, 200);
         add(Layer.player, player);
+    }
+
+    @Override
+    public void onEnter() {
+        super.onEnter();
+        // 배경음악 재생
+        Sound.playMusic(R.raw.background);
+    }
+
+    @Override
+    public void onExit() {
+        super.onExit();
+        // 배경음악 정지
+        Sound.stopMusic();
     }
 
     @Override

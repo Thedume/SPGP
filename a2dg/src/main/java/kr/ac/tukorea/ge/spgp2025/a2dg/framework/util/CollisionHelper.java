@@ -3,6 +3,7 @@ package kr.ac.tukorea.ge.spgp2025.a2dg.framework.util;
 import android.graphics.RectF;
 
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IBoxCollidable;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 
 public class CollisionHelper {
     public static boolean collides(IBoxCollidable obj1, IBoxCollidable obj2) {
