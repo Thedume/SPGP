@@ -17,6 +17,7 @@ public class Player extends SheetSprite implements IBoxCollidable {
     private State state = State.RUN;
 
     private int life = 3;
+    private boolean isMale = true;
 
     private final float[] laneX = new float[3];
     private int currentLane = 1;
@@ -37,6 +38,7 @@ public class Player extends SheetSprite implements IBoxCollidable {
     public Player(int resId, boolean isMale, float fps) {
         super(resId, fps);
         this.state = State.RUN;
+        this.isMale = isMale;
         this.targetY = null;
         this.returningY = false;
         
@@ -51,16 +53,30 @@ public class Player extends SheetSprite implements IBoxCollidable {
         }
 
         // 반드시 srcRects 초기화
-        this.srcRects = new Rect[16];
-        for (int i = 0; i < 16; i++) {
-            int col = i % 4;
-            int row = i / 4;
-            this.srcRects[i] = new Rect(
-                    col * frameWidth,
-                    row * frameHeight,
-                    (col + 1) * frameWidth,
-                    (row + 1) * frameHeight
-            );
+        if (isMale) {
+            this.srcRects = new Rect[12];  // 2행 6열 (6등분)
+            for (int i = 0; i < 12; i++) {
+                int col = i % 6;  // 6등분
+                int row = i / 6;
+                this.srcRects[i] = new Rect(
+                        col * frameWidth,
+                        row * frameHeight,
+                        (col + 1) * frameWidth,
+                        (row + 1) * frameHeight
+                );
+            }
+        } else {
+            this.srcRects = new Rect[16];  // 4행 4열 (4등분)
+            for (int i = 0; i < 16; i++) {
+                int col = i % 4;
+                int row = i / 4;
+                this.srcRects[i] = new Rect(
+                        col * frameWidth,
+                        row * frameHeight,
+                        (col + 1) * frameWidth,
+                        (row + 1) * frameHeight
+                );
+            }
         }
         float centerY = Metrics.height * 0.8f;
         this.originalY = centerY;
@@ -143,19 +159,36 @@ public class Player extends SheetSprite implements IBoxCollidable {
 
         int[] frameSet;
 
-        switch (state) {
-            case RUN:
-                frameSet = new int[]{8, 9, 10, 11};
-                break;
-            case JUMP:
-                frameSet = new int[]{0, 1, 2, 3};
-                break;
-            case SLIDE:
-                frameSet = new int[]{4, 5, 6, 7};
-                break;
-            default:
-                frameSet = new int[]{8, 9, 10, 11}; // fallback
-                break;
+        if (isMale) {
+            switch (state) {
+                case RUN:
+                    frameSet = new int[]{0, 1, 2, 3, 4, 5};  // 첫 번째 행
+                    break;
+                case JUMP:
+                    frameSet = new int[]{0, 1, 2, 3, 4, 5};  // 점프도 첫 번째 행 사용
+                    break;
+                case SLIDE:
+                    frameSet = new int[]{0, 1, 2, 3, 4, 5};  // 슬라이드도 첫 번째 행 사용
+                    break;
+                default:
+                    frameSet = new int[]{0, 1, 2, 3, 4, 5}; // fallback
+                    break;
+            }
+        } else {
+            switch (state) {
+                case RUN:
+                    frameSet = new int[]{0, 1, 2, 3};  // 4등분
+                    break;
+                case JUMP:
+                    frameSet = new int[]{0, 1, 2, 3};  // 4등분
+                    break;
+                case SLIDE:
+                    frameSet = new int[]{0, 1, 2, 3};  // 4등분
+                    break;
+                default:
+                    frameSet = new int[]{0, 1, 2, 3}; // fallback
+                    break;
+            }
         }
         if (srcRects == null || frameSet == null || frameSet.length == 0) return;
 
