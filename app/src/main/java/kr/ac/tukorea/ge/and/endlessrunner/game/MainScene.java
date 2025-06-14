@@ -101,7 +101,7 @@ public class MainScene extends Scene {
 
                 // 랜덤하게 벽 타입 장애물 생성 (20% 확률)
                 Obstacle.Type type = Math.random() < 0.2f ? Obstacle.Type.WALL : Obstacle.Type.NORMAL;
-                int resId = type == Obstacle.Type.WALL ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
+                int resId = (type == Obstacle.Type.WALL) ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
                 Obstacle obs = new Obstacle(resId, x, yOffset, type);
                 add(Layer.obstacle, obs);
             }
@@ -199,15 +199,23 @@ public class MainScene extends Scene {
 
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setTextSize(50);
+        paint.setTextSize(70);
         paint.setTextAlign(Paint.Align.LEFT);
 
         // 체력 (왼쪽 상단)
-        canvas.drawText("♥ x " + player.getLife(), 30, 60, paint);
+        StringBuilder hearts = new StringBuilder();
+        for (int i = 0; i < player.getLife(); i++) {
+            hearts.append("♥ ");
+        }
+        canvas.drawText(hearts.toString(), 30, 75, paint);
 
         // 점수 (오른쪽 상단)
         paint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText("Score: " + score, Metrics.width - 30, 60, paint);
+        paint.setColor(Color.YELLOW);  // 점수 색상을 노란색으로
+        paint.setShadowLayer(5, 0, 0, Color.BLACK);  // 그림자 효과 추가
+        canvas.drawText("SCORE", Metrics.width - 30, 60, paint);
+        canvas.drawText(String.format("%,d", score), Metrics.width - 30, 120, paint);
+        paint.clearShadowLayer();  // 그림자 효과 제거
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 
 import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
@@ -18,9 +19,14 @@ public class TitleScene extends Scene {
     private Sprite titleSprite;
     private Button maleButton;
     private Button femaleButton;
+    private Sprite backgroundSprite;
 
     public TitleScene() {
         initLayers(Layer.COUNT.ordinal());
+
+        // 배경 스프라이트 추가
+        backgroundSprite = new Sprite(R.mipmap.title_background, Metrics.width / 2, Metrics.height / 2, Metrics.width, Metrics.height);
+        add(Layer.ui, backgroundSprite);
 
         // 타이틀 스프라이트 추가
         titleSprite = new Sprite(R.mipmap.endless_runner_logo, Metrics.width / 2, 150, 800, 550);
@@ -84,15 +90,44 @@ public class TitleScene extends Scene {
 
         Paint paint = new Paint();
         paint.setTextSize(55f);
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.WHITE);
         paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
         SharedPreferences prefs = GameView.view.getContext().getSharedPreferences("score", Context.MODE_PRIVATE);
         String scoresStr = prefs.getString("records", "");
         if (!scoresStr.isEmpty()) {
+            // 점수 표시 배경
+            Paint bgPaint = new Paint();
+            bgPaint.setColor(Color.argb(180, 0, 0, 0));
+            float padding = 20f;
+            float startY = Metrics.height * 0.2f;  // 시작 위치를 위로 조정
+            float endY = startY + 450f;  // 5순위까지 표시할 수 있도록 높이 증가
+            canvas.drawRect(Metrics.width * 0.2f, startY, Metrics.width * 0.8f, endY, bgPaint);
+
+            // "HIGH SCORES" 텍스트
+            paint.setTextSize(70f);
+            canvas.drawText("HIGH SCORES", Metrics.width / 2, startY + 55f, paint);
+
+            // 점수 목록
+            paint.setTextSize(55f);
             String[] scores = scoresStr.split(",");
             for (int i = 0; i < scores.length; i++) {
-                canvas.drawText((i + 1) + "위: " + scores[i] + "점", Metrics.width / 2, Metrics.height * 0.25f + i * 80, paint);
+                String rank = (i + 1) + "위";
+                String score = scores[i] + "점";
+                float y = startY + 120f + i * 70f;  // 간격을 좀 더 조밀하게 조정
+                
+                // 순위와 점수 사이에 점선 그리기
+                Paint linePaint = new Paint();
+                linePaint.setColor(Color.WHITE);
+                linePaint.setStyle(Paint.Style.STROKE);
+                linePaint.setStrokeWidth(2f);
+                float lineY = y + 20f;
+                canvas.drawLine(Metrics.width * 0.3f, lineY, Metrics.width * 0.7f, lineY, linePaint);
+                
+                // 순위와 점수 텍스트 그리기
+                canvas.drawText(rank, Metrics.width * 0.35f, y, paint);
+                canvas.drawText(score, Metrics.width * 0.65f, y, paint);
             }
         }
     }
