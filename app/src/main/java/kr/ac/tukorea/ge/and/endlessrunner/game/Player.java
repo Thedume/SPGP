@@ -12,26 +12,27 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.SheetSprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
+import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 
 public abstract class Player extends SheetSprite implements IBoxCollidable {
     protected enum State { RUN, JUMP, SLIDE }
     protected State state = State.RUN;
 
-    protected int life = 3;
+    protected int life = GameConfig.Player.INITIAL_LIFE;
     protected final float[] laneX = new float[3];
     protected int currentLane = 1;
 
-    protected float moveSpeed = 1200f;
+    protected float moveSpeed = GameConfig.Player.MOVE_SPEED;
     protected Float targetX = null;
     protected Float targetY = null;
     protected boolean returningY = false;
     protected float originalY;
-    protected float moveYSpeed = 800f;
-    protected static final float OFFSET = 250f;
-    protected static final float EPSILON = 1.0f;
+    protected float moveYSpeed = GameConfig.Player.MOVE_Y_SPEED;
+    protected static final float OFFSET = GameConfig.Player.OFFSET;
+    protected static final float EPSILON = GameConfig.Player.EPSILON;
 
     protected boolean isInvincible = false;
-    protected static final float INVINCIBLE_DURATION = 1.5f;
+    protected static final float INVINCIBLE_DURATION = GameConfig.Player.INVINCIBLE_DURATION;
     protected float invincibleTimer = 0f;
 
     public Player(int resId, float fps) {
@@ -48,10 +49,10 @@ public abstract class Player extends SheetSprite implements IBoxCollidable {
     protected abstract int[] getFrameSetForState(State state);
 
     protected void initPosition() {
-        float centerY = Metrics.height * 0.8f;
+        float centerY = GameConfig.Game.PLAYER_Y_POSITION;
         this.originalY = centerY;
 
-        float laneOffset = Metrics.width / 4;
+        float laneOffset = GameConfig.Game.LANE_OFFSET;
         laneX[0] = Metrics.width / 2 - laneOffset;
         laneX[1] = Metrics.width / 2;
         laneX[2] = Metrics.width / 2 + laneOffset;
@@ -176,7 +177,7 @@ public abstract class Player extends SheetSprite implements IBoxCollidable {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         targetY = originalY;
                         returningY = true;
-                    }, 200);
+                    }, (long)GameConfig.Player.JUMP_DELAY);
                 }
             } else {
                 float step = dir * move;

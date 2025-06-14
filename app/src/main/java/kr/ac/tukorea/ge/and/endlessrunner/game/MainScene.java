@@ -21,6 +21,7 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.util.CollisionHelper;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
+import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 
 public class MainScene extends Scene {
     // private final Button pauseBtn;
@@ -32,7 +33,7 @@ public class MainScene extends Scene {
 
     private Player player;
     private float playerX = Metrics.width / 2;
-    private float playerY = Metrics.height * 0.8f;
+    private float playerY = GameConfig.Game.PLAYER_Y_POSITION;
 
     private int score = 0;
     private float distance = 0f;
@@ -40,17 +41,17 @@ public class MainScene extends Scene {
     private boolean isPlayerDead = false;  // 플레이어 생존 상태 추적
 
     private float startX, startY;
-    private static final float SWIPE_THRESHOLD = 50f;
+    private static final float SWIPE_THRESHOLD = GameConfig.Input.SWIPE_THRESHOLD;
 
     private int lastLane = -1;
 
     private static final String TAG = MainScene.class.getSimpleName();
 
     // 장애물 전용
-    private float spawnInterval = 2.5f;          // 장애물 묶음 생성 주기
+    private float spawnInterval = GameConfig.Obstacle.SPAWN_INTERVAL;
     private float obstacleTimer = 0f;
 
-    private float spawnDelay = 0.5f;             // 개별 장애물 간 생성 간격
+    private float spawnDelay = GameConfig.Obstacle.SPAWN_DELAY;
     private float spawnDelayTimer = 0f;
 
     private Queue<Integer> obstacleQueue = new LinkedList<>(); // 생성 예약된 레인 인덱스들
@@ -88,23 +89,23 @@ public class MainScene extends Scene {
     public void update() {
         super.update();
 
-        score += GameView.frameTime * 100; // 초당 100점 정도
-        distance += GameView.frameTime * 300; // 초당 300픽셀 = 3m
+        score += GameView.frameTime * GameConfig.Game.SCORE_PER_SECOND;
+        distance += GameView.frameTime * GameConfig.Game.DISTANCE_PER_SECOND;
 
         // 장애물 생성 로직
-        // 장애물 묶음 생성 예약
         obstacleTimer += GameView.frameTime;
         if (obstacleTimer >= spawnInterval && obstacleQueue.isEmpty()) {
             obstacleTimer = 0f;
 
             int[] lanes = {0, 1, 2};
             shuffleArray(lanes);
-            int count = 2 + (int)(Math.random() * 2); // 2~3개
+            int count = GameConfig.Obstacle.MIN_OBSTACLES_PER_GROUP + 
+                       (int)(Math.random() * (GameConfig.Obstacle.MAX_OBSTACLES_PER_GROUP - GameConfig.Obstacle.MIN_OBSTACLES_PER_GROUP + 1));
 
             for (int i = 0; i < count; i++) {
                 obstacleQueue.add(lanes[i]);
             }
-            spawnDelayTimer = 0f; // 다음 spawn 시작
+            spawnDelayTimer = 0f;
         }
 
         // 예약된 장애물 생성
@@ -117,8 +118,9 @@ public class MainScene extends Scene {
                 float x = player.getLaneX(lane);
                 float yOffset = (float)(Math.random() * 100f);
 
-                // 랜덤하게 벽 타입 장애물 생성 (20% 확률)
-                Obstacle.Type type = Math.random() < 0.2f ? Obstacle.Type.WALL : Obstacle.Type.NORMAL;
+                // 랜덤하게 벽 타입 장애물 생성
+                Obstacle.Type type = Math.random() < GameConfig.Obstacle.WALL_SPAWN_CHANCE ? 
+                                   Obstacle.Type.WALL : Obstacle.Type.NORMAL;
                 int resId = (type == Obstacle.Type.WALL) ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
                 Obstacle obs = new Obstacle(resId, x, yOffset, type);
                 add(Layer.obstacle, obs);
@@ -224,7 +226,7 @@ public class MainScene extends Scene {
 
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setTextSize(70);
+        paint.setTextSize(GameConfig.UI.SCORE_TEXT_SIZE);
         paint.setTextAlign(Paint.Align.LEFT);
 
         // 체력 (왼쪽 상단)
@@ -232,15 +234,15 @@ public class MainScene extends Scene {
         for (int i = 0; i < player.getLife(); i++) {
             hearts.append("♥ ");
         }
-        canvas.drawText(hearts.toString(), 30, 75, paint);
+        canvas.drawText(hearts.toString(), GameConfig.UI.HEART_PADDING, 75, paint);
 
         // 점수 (오른쪽 상단)
         paint.setTextAlign(Paint.Align.RIGHT);
-        paint.setColor(Color.YELLOW);  // 점수 색상을 노란색으로
-        paint.setShadowLayer(5, 0, 0, Color.BLACK);  // 그림자 효과 추가
-        canvas.drawText("SCORE", Metrics.width - 30, 60, paint);
-        canvas.drawText(String.format("%,d", score), Metrics.width - 30, 120, paint);
-        paint.clearShadowLayer();  // 그림자 효과 제거
+        paint.setColor(Color.YELLOW);
+        paint.setShadowLayer(GameConfig.UI.SCORE_SHADOW_RADIUS, 0, 0, Color.BLACK);
+        canvas.drawText("SCORE", Metrics.width - GameConfig.UI.SCORE_PADDING, 60, paint);
+        canvas.drawText(String.format("%,d", score), Metrics.width - GameConfig.UI.SCORE_PADDING, 120, paint);
+        paint.clearShadowLayer();
     }
 
 }

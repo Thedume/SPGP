@@ -2,14 +2,9 @@ package kr.ac.tukorea.ge.and.endlessrunner.game;
 
 import android.graphics.Rect;
 
-import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
+import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 
 public class FemalePlayer extends Player {
-    private static final int FRAME_WIDTH = 256 / 4;  // 4등분
-    private static final int FRAME_HEIGHT = 104;
-    private static final int SPRITE_WIDTH = 180;
-    private static final int SPRITE_HEIGHT = 73;  // 104/256 * 180 = 73.125 (비율 유지)
-
     public FemalePlayer(int resId, float fps) {
         super(resId, fps);
     }
@@ -21,10 +16,10 @@ public class FemalePlayer extends Player {
             int col = i % 4;
             int row = i / 4;
             this.srcRects[i] = new Rect(
-                    col * FRAME_WIDTH,
-                    row * FRAME_HEIGHT,
-                    (col + 1) * FRAME_WIDTH,
-                    (row + 1) * FRAME_HEIGHT
+                    col * GameConfig.Player.Female.FRAME_WIDTH,
+                    row * GameConfig.Player.Female.FRAME_HEIGHT,
+                    (col + 1) * GameConfig.Player.Female.FRAME_WIDTH,
+                    (row + 1) * GameConfig.Player.Female.FRAME_HEIGHT
             );
         }
     }
@@ -36,11 +31,11 @@ public class FemalePlayer extends Player {
 
     @Override
     protected float getSpriteWidth() {
-        return SPRITE_WIDTH;
+        return GameConfig.Player.Female.SPRITE_WIDTH;
     }
 
     @Override
     protected float getSpriteHeight() {
-        return SPRITE_HEIGHT;
+        return GameConfig.Player.Female.SPRITE_HEIGHT;
     }
 } 
