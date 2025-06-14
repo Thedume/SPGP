@@ -11,10 +11,22 @@ public class Button extends Sprite implements ITouchable {
     }
     protected OnTouchListener listener;
     private static final String TAG = Button.class.getSimpleName();
+    private boolean useCustomSize = false;
+
     public Button(int bitmapResId, float cx, float cy, float width, float height, OnTouchListener listener) {
         super(bitmapResId, cx, cy, width, height);
         this.listener = listener;
     }
+
+    public Button(int bitmapResId, float cx, float cy, OnTouchListener listener) {
+        super(bitmapResId, cx, cy, 512f, 512f);
+        this.listener = listener;
+    }
+
+    public void setCustomSize(boolean useCustomSize) {
+        this.useCustomSize = useCustomSize;
+    }
+
     protected boolean captures;
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -37,10 +49,10 @@ public class Button extends Sprite implements ITouchable {
 
     @Override
     public void draw(android.graphics.Canvas canvas) {
-        float drawWidth = 512f;
-        float drawHeight = 512f;
+        float drawWidth = useCustomSize ? width : 512f;
+        float drawHeight = useCustomSize ? height : 512f;
 
-        // 이미지 그리기 영역: 항상 512x512
+        // 이미지 그리기 영역: 실제 버튼 크기 사용
         float left = x - drawWidth / 2;
         float top = y - drawHeight / 2;
         float right = x + drawWidth / 2;
