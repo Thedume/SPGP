@@ -15,11 +15,25 @@ public class Obstacle extends Sprite implements IBoxCollidable {
     private float endY = Metrics.height * 0.8f;
     private float startScale = 0.3f;
     private float endScale = 1.25f;
+    
+    public enum Type {
+        NORMAL,
+        WALL
+    }
+    
+    private Type type;
 
-    public Obstacle(int resId, float x, float yOffset) {
+    public Obstacle(int resId, float x, float yOffset, Type type) {
         super(resId, x, -1500f + yOffset, 0, 0);
-        this.startX = Metrics.width / 2f; // 중앙에서 시작
-        this.endX = x; // 목표 x로 퍼짐
+        this.startX = Metrics.width / 2f;
+        this.endX = x;
+        this.type = type;
+        
+        if (type == Type.WALL) {
+            // 벽 타입은 높이만 더 크게 설정
+            this.startScale = 0.3f;
+            this.endScale = 1.25f;
+        }
     }
 
     @Override
@@ -28,13 +42,19 @@ public class Obstacle extends Sprite implements IBoxCollidable {
         y += dy;
 
         float t = (y - startY) / (endY - startY);
-        t = Math.min(Math.max(t, 0f), 1f); // Clamp
+        t = Math.min(Math.max(t, 0f), 1f);
 
         float scale = startScale + (endScale - startScale) * t;
         float size = 150f * scale;
 
         x = startX + (endX - startX) * t;
-        setSize(size, size);
+        
+        if (type == Type.WALL) {
+            // 벽 타입은 높이만 1.5배로 설정
+            setSize(size, size * 1.5f);
+        } else {
+            setSize(size, size);
+        }
 
         if (y - height / 2 > Metrics.height) {
             Scene.top().remove(MainScene.Layer.obstacle, this);
@@ -51,6 +71,9 @@ public class Obstacle extends Sprite implements IBoxCollidable {
         this.height = height;
         dstRect.set(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
     }
-
+    
+    public boolean isWall() {
+        return type == Type.WALL;
+    }
 }
 

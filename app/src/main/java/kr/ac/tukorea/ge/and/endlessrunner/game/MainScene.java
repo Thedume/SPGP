@@ -99,7 +99,10 @@ public class MainScene extends Scene {
                 float x = player.getLaneX(lane);
                 float yOffset = (float)(Math.random() * 100f);
 
-                Obstacle obs = new Obstacle(R.mipmap.obstacle_box, x, yOffset);
+                // 랜덤하게 벽 타입 장애물 생성 (20% 확률)
+                Obstacle.Type type = Math.random() < 0.2f ? Obstacle.Type.WALL : Obstacle.Type.NORMAL;
+                int resId = type == Obstacle.Type.WALL ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
+                Obstacle obs = new Obstacle(resId, x, yOffset, type);
                 add(Layer.obstacle, obs);
             }
         }
@@ -109,19 +112,19 @@ public class MainScene extends Scene {
         for (IGameObject obj : obstacles) {
             if (!(obj instanceof IBoxCollidable)) continue;
             if (CollisionHelper.collides(player, (IBoxCollidable) obj)) {
-                // 플레이어가 점프 중이면 충돌 무시
-                if (player.isJumping() && !player.isJumpEnded()) {
-                    continue;
-                }
-                Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
-                player.decreaseLife();
-                remove(Layer.obstacle, obj);
+                // 벽 타입이거나 점프 중이 아닐 때만 충돌 처리
+                Obstacle obstacle = (Obstacle) obj;
+                if (obstacle.isWall() || !player.isJumping() || player.isJumpEnded()) {
+                    Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
+                    player.decreaseLife();
+                    remove(Layer.obstacle, obj);
 
-                if (player.isDead()) {
-                    isPlayerDead = true;  // 플레이어가 죽었음을 표시
-                    new GameOverScene(score, distance, isMale).change();
+                    if (player.isDead()) {
+                        isPlayerDead = true;  // 플레이어가 죽었음을 표시
+                        new GameOverScene(score, distance, isMale).change();
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
