@@ -60,7 +60,7 @@ public class MainScene extends Scene {
         add(Layer.bg, new VertScrollBackground(R.mipmap.bg_city, 300));
 
         // 캐릭터 생성
-        int resId = isMale ? R.mipmap.char_male : R.mipmap.char_female;
+        int resId = isMale ? R.mipmap.to_back_man : R.mipmap.char_female;
         player = new Player(resId, 10); // 10fps
         player.setPosition(playerX, playerY, 200, 200);
         add(Layer.player, player);
@@ -89,7 +89,7 @@ public class MainScene extends Scene {
             spawnDelayTimer = 0f; // 다음 spawn 시작
         }
 
-// 예약된 장애물 생성
+        // 예약된 장애물 생성
         if (!obstacleQueue.isEmpty()) {
             spawnDelayTimer += GameView.frameTime;
             if (spawnDelayTimer >= spawnDelay) {
@@ -104,13 +104,15 @@ public class MainScene extends Scene {
             }
         }
 
-
-
         // 충돌 감지
         ArrayList<IGameObject> obstacles = objectsAt(Layer.obstacle);
         for (IGameObject obj : obstacles) {
             if (!(obj instanceof IBoxCollidable)) continue;
             if (CollisionHelper.collides(player, (IBoxCollidable) obj)) {
+                // 플레이어가 점프 중이면 충돌 무시
+                if (player.isJumping() && !player.isJumpEnded()) {
+                    continue;
+                }
                 Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
                 player.decreaseLife();
                 remove(Layer.obstacle, obj);

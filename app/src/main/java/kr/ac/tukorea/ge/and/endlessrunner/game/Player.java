@@ -232,4 +232,12 @@ public class Player extends SheetSprite implements IBoxCollidable {
     public boolean isInvincible() {
         return isInvincible;
     }
+
+    public boolean isJumping() {
+        return state == State.JUMP;
+    }
+
+    public boolean isJumpEnded() {
+        return state == State.JUMP && targetY == null && !returningY;
+    }
 }
