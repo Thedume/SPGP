@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
-import android.util.Log;
 
 import kr.ac.tukorea.ge.and.endlessrunner.R;
-import kr.ac.tukorea.ge.and.endlessrunner.game.MainScene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
@@ -43,7 +41,6 @@ public class TitleScene extends Scene {
         // 남자 선택 버튼
         maleButton = new Button(characterIndex == 0 ? R.mipmap.select : R.mipmap.selected, maleX, buttonY, buttonWidth, buttonHeight, pressed -> {
             if (pressed) {
-                //Log.d("TitleScene", "press maleButton");
                 characterIndex = 0;
                 maleButton.setImageResourceId(R.mipmap.selected);
                 femaleButton.setImageResourceId(R.mipmap.select);
@@ -56,7 +53,6 @@ public class TitleScene extends Scene {
         // 여자 선택 버튼
         femaleButton = new Button(characterIndex == 1 ? R.mipmap.select : R.mipmap.selected, femaleX, buttonY, buttonWidth, buttonHeight, pressed -> {
             if (pressed) {
-                //Log.d("TitleScene", "press femaleButton");
                 characterIndex = 1;
                 maleButton.setImageResourceId(R.mipmap.select);
                 femaleButton.setImageResourceId(R.mipmap.selected);

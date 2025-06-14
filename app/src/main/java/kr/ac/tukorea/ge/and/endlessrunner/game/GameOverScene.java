@@ -1,26 +1,18 @@
 package kr.ac.tukorea.ge.and.endlessrunner.game;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.ArrayList;
 
 import kr.ac.tukorea.ge.and.endlessrunner.R;
-import kr.ac.tukorea.ge.and.endlessrunner.app.MainActivity;
-import kr.ac.tukorea.ge.and.endlessrunner.game.MainScene;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
-import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 

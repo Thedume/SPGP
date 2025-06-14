@@ -4,12 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import kr.ac.tukorea.ge.and.endlessrunner.BuildConfig;
-import kr.ac.tukorea.ge.and.endlessrunner.game.MainScene;
 import kr.ac.tukorea.ge.and.endlessrunner.game.TitleScene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.activity.GameActivity;
-import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
-import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.GameView;
 
 public class EndlessRunnerActivity extends GameActivity {
 
