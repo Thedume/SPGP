@@ -65,7 +65,7 @@ public class MainScene extends Scene {
 
         // 캐릭터 생성
         int resId = isMale ? R.mipmap.to_back_man : R.mipmap.to_back_female;
-        player = new Player(resId, isMale, 10); // 10fps
+        player = isMale ? new MalePlayer(resId, 10) : new FemalePlayer(resId, 10);
         player.setPosition(playerX, playerY, 200, 200);
         add(Layer.player, player);
     }

@@ -1,0 +1,46 @@
+package kr.ac.tukorea.ge.and.endlessrunner.game;
+
+import android.graphics.Rect;
+
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
+
+public class MalePlayer extends Player {
+    private static final int FRAME_WIDTH = 400 / 6;  // 6등분
+    private static final int FRAME_HEIGHT = 100;
+    private static final int SPRITE_WIDTH = 200;
+    private static final int SPRITE_HEIGHT = 50;
+
+    public MalePlayer(int resId, float fps) {
+        super(resId, fps);
+    }
+
+    @Override
+    protected void initSpriteSettings() {
+        this.srcRects = new Rect[12];  // 2행 6열 (6등분)
+        for (int i = 0; i < 12; i++) {
+            int col = i % 6;  // 6등분
+            int row = i / 6;
+            this.srcRects[i] = new Rect(
+                    col * FRAME_WIDTH,
+                    row * FRAME_HEIGHT,
+                    (col + 1) * FRAME_WIDTH,
+                    (row + 1) * FRAME_HEIGHT
+            );
+        }
+    }
+
+    @Override
+    protected int[] getFrameSetForState(State state) {
+        return new int[]{0, 1, 2, 3, 4, 5};  // 모든 상태에서 동일한 프레임셋 사용
+    }
+
+    @Override
+    protected float getSpriteWidth() {
+        return SPRITE_WIDTH;
+    }
+
+    @Override
+    protected float getSpriteHeight() {
+        return SPRITE_HEIGHT;
+    }
+} 
