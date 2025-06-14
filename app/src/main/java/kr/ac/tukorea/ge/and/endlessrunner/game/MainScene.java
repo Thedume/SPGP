@@ -56,6 +56,8 @@ public class MainScene extends Scene {
 
     private Queue<Integer> obstacleQueue = new LinkedList<>(); // 생성 예약된 레인 인덱스들
 
+    private ObstacleSpawner obstacleSpawner;
+
     public MainScene(boolean isMale) {
         this.isMale = isMale;
 
@@ -69,6 +71,9 @@ public class MainScene extends Scene {
         player = isMale ? new MalePlayer(resId, 10) : new FemalePlayer(resId, 10);
         player.setPosition(playerX, playerY, 200, 200);
         add(Layer.player, player);
+
+        // 장애물 생성기 초기화
+        obstacleSpawner = new ObstacleSpawner(this, player, Layer.obstacle);
     }
 
     @Override
@@ -76,6 +81,7 @@ public class MainScene extends Scene {
         super.onEnter();
         // 배경음악 재생
         Sound.playMusic(R.raw.background);
+        obstacleSpawner.reset();
     }
 
     @Override
@@ -92,47 +98,14 @@ public class MainScene extends Scene {
         score += GameView.frameTime * GameConfig.Game.SCORE_PER_SECOND;
         distance += GameView.frameTime * GameConfig.Game.DISTANCE_PER_SECOND;
 
-        // 장애물 생성 로직
-        obstacleTimer += GameView.frameTime;
-        if (obstacleTimer >= spawnInterval && obstacleQueue.isEmpty()) {
-            obstacleTimer = 0f;
-
-            int[] lanes = {0, 1, 2};
-            shuffleArray(lanes);
-            int count = GameConfig.Obstacle.MIN_OBSTACLES_PER_GROUP + 
-                       (int)(Math.random() * (GameConfig.Obstacle.MAX_OBSTACLES_PER_GROUP - GameConfig.Obstacle.MIN_OBSTACLES_PER_GROUP + 1));
-
-            for (int i = 0; i < count; i++) {
-                obstacleQueue.add(lanes[i]);
-            }
-            spawnDelayTimer = 0f;
-        }
-
-        // 예약된 장애물 생성
-        if (!obstacleQueue.isEmpty()) {
-            spawnDelayTimer += GameView.frameTime;
-            if (spawnDelayTimer >= spawnDelay) {
-                spawnDelayTimer = 0f;
-
-                int lane = obstacleQueue.poll();
-                float x = player.getLaneX(lane);
-                float yOffset = (float)(Math.random() * 100f);
-
-                // 랜덤하게 벽 타입 장애물 생성
-                Obstacle.Type type = Math.random() < GameConfig.Obstacle.WALL_SPAWN_CHANCE ? 
-                                   Obstacle.Type.WALL : Obstacle.Type.NORMAL;
-                int resId = (type == Obstacle.Type.WALL) ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
-                Obstacle obs = new Obstacle(resId, x, yOffset, type);
-                add(Layer.obstacle, obs);
-            }
-        }
+        // 장애물 생성 업데이트
+        obstacleSpawner.update();
 
         // 충돌 감지
         ArrayList<IGameObject> obstacles = objectsAt(Layer.obstacle);
         for (IGameObject obj : obstacles) {
             if (!(obj instanceof IBoxCollidable)) continue;
             if (CollisionHelper.collides(player, (IBoxCollidable) obj)) {
-                // 벽 타입이거나 점프 중이 아닐 때만 충돌 처리
                 Obstacle obstacle = (Obstacle) obj;
                 if (obstacle.isWall() || !player.isJumping() || player.isJumpEnded()) {
                     Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
@@ -140,7 +113,7 @@ public class MainScene extends Scene {
                     remove(Layer.obstacle, obj);
 
                     if (player.isDead()) {
-                        isPlayerDead = true;  // 플레이어가 죽었음을 표시
+                        isPlayerDead = true;
                         new GameOverScene(score, distance, isMale).change();
                     }
                     break;
