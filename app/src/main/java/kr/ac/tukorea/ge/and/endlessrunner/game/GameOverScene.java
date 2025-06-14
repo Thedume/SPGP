@@ -23,6 +23,9 @@ public class GameOverScene extends Scene {
     private final boolean isMale;
     private Sprite gameOverSprite;
 
+    private Button retryBtn;
+    private Button toMainBtn;
+
     public GameOverScene(int score, float distance, boolean isMale) {
         this.score = score;
         this.distance = distance;
@@ -33,29 +36,30 @@ public class GameOverScene extends Scene {
         gameOverSprite = new Sprite(R.mipmap.game_over_2, Metrics.width / 2, Metrics.height * 0.15f, 800, 200);
         add(Layer.ui, gameOverSprite);
 
-        add(Layer.ui, new Button(
-                R.mipmap.retry_button,
-                Metrics.width / 2,
-                Metrics.height * 0.65f,
-                300, 120, // ✅ 크기 조절 (터치 영역 작게)
+        retryBtn = new Button(
+                R.mipmap.retry_btn,
+                Metrics.width / 2, Metrics.height * 0.7f,
+                400f, 150f,
                 pressed -> {
-                    Log.d("GameOverScene", "🔁 Retry 버튼 눌림");
                     new MainScene(isMale).change();
                     return true;
                 }
-        ));
+        );
+        retryBtn.setCustomSize(true);
+        add(TitleScene.Layer.ui, retryBtn);
 
-        add(Layer.ui, new Button(
+
+        toMainBtn = new Button(
                 R.mipmap.to_main_btn,
-                Metrics.width / 2,
-                Metrics.height * 0.8f,
-                300, 120, // 터치 감지용 영역
+                Metrics.width / 2, Metrics.height * 0.825f,
+                400f, 150f,
                 pressed -> {
                     new TitleScene().change();
                     return true;
                 }
-        ));
-
+        );
+        toMainBtn.setCustomSize(true);
+        add(TitleScene.Layer.ui, toMainBtn);
 
     }
 
