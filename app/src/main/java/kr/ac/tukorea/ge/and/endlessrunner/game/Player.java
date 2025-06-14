@@ -18,7 +18,7 @@ public class Player extends SheetSprite implements IBoxCollidable {
     private enum State { RUN, JUMP, SLIDE }
     private State state = State.RUN;
 
-    private int life = 1;
+    private int life = 3;
     private boolean isMale = true;
 
     private final float[] laneX = new float[3];

@@ -14,6 +14,7 @@ import java.util.Queue;
 import kr.ac.tukorea.ge.and.endlessrunner.R;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IBoxCollidable;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IGameObject;
+import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Button;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.VertScrollBackground;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.util.CollisionHelper;
@@ -22,8 +23,10 @@ import kr.ac.tukorea.ge.spgp2025.a2dg.framework.view.Metrics;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.res.Sound;
 
 public class MainScene extends Scene {
+    // private final Button pauseBtn;
+
     public enum Layer {
-        bg, obstacle, player, ui, controller, COUNT
+        bg, obstacle, player, ui, controller, touch, COUNT
     }
 
 
@@ -154,8 +157,15 @@ public class MainScene extends Scene {
     }
 
     @Override
+    public boolean onBackPressed() {
+        Log.d(TAG, "뒤로가기 버튼 눌림");
+        new PauseScene().push();
+        return true;
+    }
+
+    @Override
     protected int getTouchLayerIndex() {
-        return Layer.controller.ordinal();
+        return Layer.touch.ordinal();
     }
 
     private boolean gestureUsed = false;
