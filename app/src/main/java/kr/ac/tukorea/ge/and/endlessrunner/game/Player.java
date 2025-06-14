@@ -34,16 +34,24 @@ public class Player extends SheetSprite implements IBoxCollidable {
     private static final float INVINCIBLE_DURATION = 1.5f;
     private float invincibleTimer = 0f;
 
-    public Player(int resId, float fps) {
+    public Player(int resId, boolean isMale, float fps) {
         super(resId, fps);
         this.state = State.RUN;
         this.targetY = null;
         this.returningY = false;
+        
+        // 남녀 캐릭터에 따른 스프라이트 설정
+        int frameWidth, frameHeight;
+        if (isMale) {
+            frameWidth = 400 / 6;  // 6등분
+            frameHeight = 100;
+        } else {
+            frameWidth = 256 / 4;  // 4등분
+            frameHeight = 104;
+        }
+
         // 반드시 srcRects 초기화
         this.srcRects = new Rect[16];
-        int frameWidth = 128;
-        int frameHeight = 128;
-
         for (int i = 0; i < 16; i++) {
             int col = i % 4;
             int row = i / 4;
@@ -63,7 +71,18 @@ public class Player extends SheetSprite implements IBoxCollidable {
         laneX[2] = Metrics.width / 2 + laneOffset;
 
         this.originalY = centerY;
-        setPosition(laneX[currentLane], originalY, 200, 200);
+        
+        // 남녀 캐릭터에 따른 크기 설정
+        float spriteWidth, spriteHeight;
+        if (isMale) {
+            spriteWidth = 200;
+            spriteHeight = 50;  // 높이를 프레임 비율에 맞게 조정
+        } else {
+            spriteWidth = 180;  // 여자 캐릭터 폭을 180으로 조정
+            spriteHeight = 73;  // 104/256 * 180 = 73.125 (비율 유지)
+        }
+        
+        setPosition(laneX[currentLane], originalY, spriteWidth, spriteHeight);
         this.y = originalY;
     }
 
@@ -81,18 +100,6 @@ public class Player extends SheetSprite implements IBoxCollidable {
         returningY = false;
     }
 
-    private void moveBy(float dy) {
-        this.y += dy;
-        dstRect.offset(0, dy);
-    }
-
-    private void scheduleReset(State targetState, float reverseDy) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            state = targetState;
-            moveBy(reverseDy); // 위치 복구
-        }, 300); // 0.3초 후 복귀
-    }
-
     public void moveLeft() {
         if (currentLane > 0) {
             currentLane--;
@@ -105,12 +112,6 @@ public class Player extends SheetSprite implements IBoxCollidable {
             currentLane++;
             targetX = laneX[currentLane];
         }
-    }
-
-    private void setX(float x) {
-        float dx = x - this.x;
-        this.x = x;
-        dstRect.offset(dx, 0);
     }
 
     public void decreaseLife() {
@@ -227,10 +228,6 @@ public class Player extends SheetSprite implements IBoxCollidable {
     @Override
     public RectF getCollisionRect() {
         return dstRect;
-    }
-
-    public boolean isInvincible() {
-        return isInvincible;
     }
 
     public boolean isJumping() {

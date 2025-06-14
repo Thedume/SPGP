@@ -60,8 +60,8 @@ public class MainScene extends Scene {
         add(Layer.bg, new VertScrollBackground(R.mipmap.bg_city, 300));
 
         // 캐릭터 생성
-        int resId = isMale ? R.mipmap.to_back_man : R.mipmap.char_female;
-        player = new Player(resId, 10); // 10fps
+        int resId = isMale ? R.mipmap.to_back_man : R.mipmap.to_back_female;
+        player = new Player(resId, isMale, 10); // 10fps
         player.setPosition(playerX, playerY, 200, 200);
         add(Layer.player, player);
     }

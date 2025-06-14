@@ -39,7 +39,7 @@ public class TitleScene extends Scene {
         add(Layer.ui, new Sprite(R.mipmap.char_female_icon, femaleX, iconY, iconSize, iconSize));
 
         // 남자 선택 버튼
-        maleButton = new Button(characterIndex == 0 ? R.mipmap.select : R.mipmap.selected, maleX, buttonY, buttonWidth, buttonHeight, pressed -> {
+        maleButton = new Button(characterIndex == 0 ? R.mipmap.selected : R.mipmap.select, maleX, buttonY, buttonWidth, buttonHeight, pressed -> {
             if (pressed) {
                 characterIndex = 0;
                 maleButton.setImageResourceId(R.mipmap.selected);
@@ -51,7 +51,7 @@ public class TitleScene extends Scene {
         add(Layer.ui, maleButton);
 
         // 여자 선택 버튼
-        femaleButton = new Button(characterIndex == 1 ? R.mipmap.select : R.mipmap.selected, femaleX, buttonY, buttonWidth, buttonHeight, pressed -> {
+        femaleButton = new Button(characterIndex == 1 ? R.mipmap.selected : R.mipmap.select, femaleX, buttonY, buttonWidth, buttonHeight, pressed -> {
             if (pressed) {
                 characterIndex = 1;
                 maleButton.setImageResourceId(R.mipmap.select);
