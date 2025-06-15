@@ -56,6 +56,7 @@ public class GameConfig {
         public static final float SPAWN_INTERVAL = 2.5f;
         public static final float SPAWN_DELAY = 0.5f;
         public static final float WALL_SPAWN_CHANCE = 0.2f;
+        public static final float LOW_WALL_SPAWN_CHANCE = 0.3f;
         public static final int MIN_OBSTACLES_PER_GROUP = 2;
         public static final int MAX_OBSTACLES_PER_GROUP = 3;
     }

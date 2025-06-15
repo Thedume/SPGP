@@ -61,9 +61,21 @@ public class ObstacleSpawner {
         float x = player.getLaneX(lane);
         float yOffset = (float)(Math.random() * 100f);
 
-        Obstacle.Type type = Math.random() < GameConfig.Obstacle.WALL_SPAWN_CHANCE ? 
-                           Obstacle.Type.WALL : Obstacle.Type.NORMAL;
-        int resId = (type == Obstacle.Type.WALL) ? R.mipmap.obstacle_wall : R.mipmap.obstacle_box;
+        double random = Math.random();
+        Obstacle.Type type;
+        int resId;
+        
+        if (random < GameConfig.Obstacle.WALL_SPAWN_CHANCE) {
+            type = Obstacle.Type.WALL;
+            resId = R.mipmap.obstacle_wall;
+        } else if (random < GameConfig.Obstacle.WALL_SPAWN_CHANCE + GameConfig.Obstacle.LOW_WALL_SPAWN_CHANCE) {
+            type = Obstacle.Type.LOW_WALL;
+            resId = R.mipmap.obstacle_low_wall;
+        } else {
+            type = Obstacle.Type.NORMAL;
+            resId = R.mipmap.obstacle_box;
+        }
+        
         Obstacle obs = new Obstacle(resId, x, yOffset, type);
         scene.add(obstacleLayer, obs);
     }

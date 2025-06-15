@@ -19,7 +19,8 @@ public class Obstacle extends Sprite implements IBoxCollidable {
     
     public enum Type {
         NORMAL,
-        WALL
+        WALL,
+        LOW_WALL
     }
     
     private Type type;
@@ -34,6 +35,10 @@ public class Obstacle extends Sprite implements IBoxCollidable {
             // 벽 타입은 높이만 더 크게 설정
             this.startScale = 0.3f;
             this.endScale = 1.25f;
+        } else if (type == Type.LOW_WALL) {
+            // 낮은 벽은 높이를 더 작게 설정
+            this.startScale = 0.4f;
+            this.endScale = 1.1f;
         }
     }
 
@@ -53,6 +58,9 @@ public class Obstacle extends Sprite implements IBoxCollidable {
         if (type == Type.WALL) {
             // 벽 타입은 높이만 1.5배로 설정
             setSize(size, size * 1.5f);
+        } else if (type == Type.LOW_WALL) {
+            // 낮은 벽은 높이를 1.2배로 설정
+            setSize(size, size * 1.2f);
         } else {
             setSize(size, size);
         }
@@ -91,6 +99,10 @@ public class Obstacle extends Sprite implements IBoxCollidable {
     
     public boolean isWall() {
         return type == Type.WALL;
+    }
+
+    public boolean isLowWall() {
+        return type == Type.LOW_WALL;
     }
 }
 

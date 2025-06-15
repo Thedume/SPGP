@@ -130,7 +130,10 @@ public class MainScene extends Scene {
             if (!(obj instanceof IBoxCollidable)) continue;
             if (CollisionHelper.collides(player, (IBoxCollidable) obj)) {
                 Obstacle obstacle = (Obstacle) obj;
-                if (obstacle.isWall() || !player.isJumping() || player.isJumpEnded()) {
+                if (obstacle.isWall() || 
+                    (obstacle.isLowWall() && !player.isSliding()) || 
+                    (!player.isJumping() && !player.isSliding()) || 
+                    player.isJumpEnded()) {
                     Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
                     player.decreaseLife();
                     remove(Layer.obstacle, obj);
