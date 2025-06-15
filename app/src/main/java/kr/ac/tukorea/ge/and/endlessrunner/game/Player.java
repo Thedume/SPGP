@@ -219,4 +219,8 @@ public abstract class Player extends SheetSprite implements IBoxCollidable {
     public boolean isSliding() {
         return state == State.SLIDE;
     }
+
+    public boolean isSlideEnded() {
+        return state == State.SLIDE && targetY == null;
+    }
 }

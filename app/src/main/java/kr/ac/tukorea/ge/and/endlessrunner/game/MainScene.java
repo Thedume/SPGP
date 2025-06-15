@@ -132,8 +132,9 @@ public class MainScene extends Scene {
                 Obstacle obstacle = (Obstacle) obj;
                 if (obstacle.isWall() || 
                     (obstacle.isLowWall() && !player.isSliding()) || 
-                    (!player.isJumping() && !player.isSliding()) || 
-                    player.isJumpEnded()) {
+                    (!obstacle.isWall() && !obstacle.isLowWall() && !player.isJumping()) || 
+                    player.isJumpEnded() || 
+                    (obstacle.isLowWall() && player.isSliding() && player.isSlideEnded())) {
                     Log.d(TAG, "\uD83D\uDCA5 충돌 발생!");
                     player.decreaseLife();
                     remove(Layer.obstacle, obj);
