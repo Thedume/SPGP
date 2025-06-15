@@ -100,7 +100,22 @@ public class MainScene extends Scene {
         // 점수 업데이트 로직 수정
         scoreUpdateTimer += GameView.frameTime;
         if (scoreUpdateTimer >= SCORE_UPDATE_INTERVAL) {
-            score += (int)(GameConfig.Game.SCORE_PER_SECOND * SCORE_UPDATE_INTERVAL);
+            // 기본 점수 계산
+            float baseScore = GameConfig.Game.SCORE_PER_SECOND * SCORE_UPDATE_INTERVAL;
+            
+            // 거리에 따른 가중치 계산
+            float distanceBonus = distance * GameConfig.Game.DISTANCE_MULTIPLIER * SCORE_UPDATE_INTERVAL;
+            
+            // 보너스 구간 체크 (1000m마다)
+            float bonusMultiplier = 1.0f;
+            if (distance > 0 && (int)(distance / GameConfig.Game.DISTANCE_BONUS_THRESHOLD) > 
+                (int)((distance - GameConfig.Game.DISTANCE_PER_SECOND * SCORE_UPDATE_INTERVAL) / GameConfig.Game.DISTANCE_BONUS_THRESHOLD)) {
+                bonusMultiplier = GameConfig.Game.DISTANCE_BONUS_MULTIPLIER;
+                Sound.playEffect(R.raw.touch); // 보너스 구간 진입 효과음
+            }
+            
+            // 최종 점수 계산
+            score += (int)((baseScore + distanceBonus) * bonusMultiplier / 10);
             scoreUpdateTimer = 0f;
         }
         

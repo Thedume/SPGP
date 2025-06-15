@@ -44,6 +44,11 @@ public class GameConfig {
         public static final float DISTANCE_PER_SECOND = 300f;
         public static final float PLAYER_Y_POSITION = Metrics.height * 0.8f;
         public static final float LANE_OFFSET = Metrics.width / 4f;
+        
+        // 거리 가중치 설정
+        public static final float DISTANCE_MULTIPLIER = 0.5f;  // 1m당 0.5점 추가
+        public static final float DISTANCE_BONUS_THRESHOLD = 1000f;  // 1000m마다 보너스
+        public static final float DISTANCE_BONUS_MULTIPLIER = 2.0f;  // 보너스 구간에서의 점수 배율
     }
     
     // 장애물 관련 설정
