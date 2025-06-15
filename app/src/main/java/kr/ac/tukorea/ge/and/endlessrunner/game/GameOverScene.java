@@ -152,11 +152,11 @@ public class GameOverScene extends Scene {
         canvas.drawLine(Metrics.width * 0.3f, lineY, Metrics.width * 0.7f, lineY, linePaint);
 
         // 결과 텍스트
-        textPaint.setTextSize(60f);
+        textPaint.setTextSize(45f);
         float textY = startY + 250f;
         float spacing = 80f;
-        float labelX = Metrics.width * 0.20f;  // 라벨 시작 위치를 왼쪽으로 더 조정
-        float valueX = Metrics.width * 0.80f;  // 값 고정 위치를 더 오른쪽으로 조정
+        float labelX = Metrics.width * 0.20f;
+        float valueX = Metrics.width * 0.80f;
 
         // Score
         textPaint.setColor(Color.YELLOW);
@@ -182,7 +182,7 @@ public class GameOverScene extends Scene {
         canvas.drawText("CHARACTER", labelX, textY, textPaint);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(isMale ? "MALE" : "FEMALE", valueX, textY, textPaint);
+        canvas.drawText(isMale ? "남자" : "여자", valueX, textY, textPaint);
     }
 
     @Override
