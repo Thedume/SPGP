@@ -68,19 +68,7 @@
 ---
 
 ##  Git Commit 활동 (GitHub Insights 기반)
-
-![GithubInsight](./resource/github_insight.png)
-
-| 주차 | 커밋 수 |
-|------|--------|
-| 1주차 | 0회 |
-| 2주차 | 0회 |
-| 3주차 | 0회 |
-| 4주차 | 0회 |
-| 5주차 | 1회 |   
-
-
-> 5주차까지 깃허브에 올리는 것을 잊어, 커밋을 하지 못했습니다. 이후부턴 착실히 하겠습니다.
+![GithubInsight](./resource/github_commit_log.png)
 
 ---
 
