@@ -19,6 +19,10 @@ public class GameConfig {
             public static final int FRAME_HEIGHT = 100;
             public static final int SPRITE_WIDTH = 200;
             public static final int SPRITE_HEIGHT = 50;
+            
+            // 남성 캐릭터 특수 스탯
+            public static final float MOVE_SPEED_MULTIPLIER = 1.1f;  // 이동 속도 10% 증가
+            public static final float INVINCIBLE_DURATION_MULTIPLIER = 1.3f;  // 무적 시간 30% 증가
         }
         
         // 여성 캐릭터 설정
@@ -27,6 +31,10 @@ public class GameConfig {
             public static final int FRAME_HEIGHT = 104;
             public static final int SPRITE_WIDTH = 180;
             public static final int SPRITE_HEIGHT = 73;
+            
+            // 여성 캐릭터 특수 스탯
+            public static final float COLLISION_SIZE_MULTIPLIER = 0.8f;  // 충돌 판정 20% 감소
+            public static final int EXTRA_LIFE = 1;  // 추가 생명력 1개
         }
     }
     

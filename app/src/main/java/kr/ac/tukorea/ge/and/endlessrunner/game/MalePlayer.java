@@ -7,6 +7,7 @@ import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 public class MalePlayer extends Player {
     public MalePlayer(int resId, float fps) {
         super(resId, fps);
+        applyCharacterStats(true);  // 남성 캐릭터 스탯 적용
     }
 
     @Override

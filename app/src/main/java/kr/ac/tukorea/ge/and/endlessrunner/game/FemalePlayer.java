@@ -7,6 +7,7 @@ import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 public class FemalePlayer extends Player {
     public FemalePlayer(int resId, float fps) {
         super(resId, fps);
+        applyCharacterStats(false);  // 여성 캐릭터 스탯 적용
     }
 
     @Override
@@ -31,11 +32,11 @@ public class FemalePlayer extends Player {
 
     @Override
     protected float getSpriteWidth() {
-        return GameConfig.Player.Female.SPRITE_WIDTH;
+        return GameConfig.Player.Female.SPRITE_WIDTH * GameConfig.Player.Female.COLLISION_SIZE_MULTIPLIER;
     }
 
     @Override
     protected float getSpriteHeight() {
-        return GameConfig.Player.Female.SPRITE_HEIGHT;
+        return GameConfig.Player.Female.SPRITE_HEIGHT * GameConfig.Player.Female.COLLISION_SIZE_MULTIPLIER;
     }
-} 
+}

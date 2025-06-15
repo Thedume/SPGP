@@ -34,6 +34,18 @@ public abstract class Player extends SheetSprite implements IBoxCollidable {
     protected boolean isInvincible = false;
     protected static final float INVINCIBLE_DURATION = GameConfig.Player.INVINCIBLE_DURATION;
     protected float invincibleTimer = 0f;
+    
+    // 캐릭터별 스탯 적용
+    protected void applyCharacterStats(boolean isMale) {
+        if (isMale) {
+            // 남성 캐릭터 스탯 적용
+            moveSpeed *= GameConfig.Player.Male.MOVE_SPEED_MULTIPLIER;
+            invincibleTimer *= GameConfig.Player.Male.INVINCIBLE_DURATION_MULTIPLIER;
+        } else {
+            // 여성 캐릭터 스탯 적용
+            life += GameConfig.Player.Female.EXTRA_LIFE;
+        }
+    }
 
     public Player(int resId, float fps) {
         super(resId, fps);

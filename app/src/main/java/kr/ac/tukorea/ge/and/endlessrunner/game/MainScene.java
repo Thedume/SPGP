@@ -39,6 +39,8 @@ public class MainScene extends Scene {
     private float distance = 0f;
     private boolean isMale;
     private boolean isPlayerDead = false;  // 플레이어 생존 상태 추적
+    private float scoreUpdateTimer = 0f;  // 점수 업데이트 타이머 추가
+    private static final float SCORE_UPDATE_INTERVAL = 0.1f;  // 0.1초마다 점수 업데이트
 
     private float startX, startY;
     private static final float SWIPE_THRESHOLD = GameConfig.Input.SWIPE_THRESHOLD;
@@ -95,7 +97,13 @@ public class MainScene extends Scene {
     public void update() {
         super.update();
 
-        score += GameView.frameTime * GameConfig.Game.SCORE_PER_SECOND;
+        // 점수 업데이트 로직 수정
+        scoreUpdateTimer += GameView.frameTime;
+        if (scoreUpdateTimer >= SCORE_UPDATE_INTERVAL) {
+            score += (int)(GameConfig.Game.SCORE_PER_SECOND * SCORE_UPDATE_INTERVAL);
+            scoreUpdateTimer = 0f;
+        }
+        
         distance += GameView.frameTime * GameConfig.Game.DISTANCE_PER_SECOND;
 
         // 장애물 생성 업데이트
@@ -218,4 +226,7 @@ public class MainScene extends Scene {
         paint.clearShadowLayer();
     }
 
+    public boolean isMale() {
+        return isMale;
+    }
 }

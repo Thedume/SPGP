@@ -2,6 +2,7 @@ package kr.ac.tukorea.ge.and.endlessrunner.game;
 
 import android.graphics.RectF;
 
+import kr.ac.tukorea.ge.and.endlessrunner.config.GameConfig;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.interfaces.IBoxCollidable;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.objects.Sprite;
 import kr.ac.tukorea.ge.spgp2025.a2dg.framework.scene.Scene;
@@ -63,6 +64,22 @@ public class Obstacle extends Sprite implements IBoxCollidable {
 
     @Override
     public RectF getCollisionRect() {
+        if (Scene.top() instanceof MainScene) {
+            MainScene scene = (MainScene) Scene.top();
+            if (!scene.isMale()) {
+                // 여성 캐릭터의 경우 충돌 판정을 더 작게
+                float centerX = dstRect.centerX();
+                float centerY = dstRect.centerY();
+                float width = dstRect.width() * GameConfig.Player.Female.COLLISION_SIZE_MULTIPLIER;
+                float height = dstRect.height() * GameConfig.Player.Female.COLLISION_SIZE_MULTIPLIER;
+                return new RectF(
+                    centerX - width/2,
+                    centerY - height/2,
+                    centerX + width/2,
+                    centerY + height/2
+                );
+            }
+        }
         return dstRect;
     }
 
